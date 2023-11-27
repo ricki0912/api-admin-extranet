@@ -8,19 +8,18 @@ use App\Models\BUser;
 
 class UserController extends Controller
 {
-    
+
     public function index()
     {
-        //$u = BUser::select()->where(['uid'=>'1394403041'])->first()->person; 
-        $u = BUser::select()->where(['uid'=>'1394403041'])->first(); 
-        $u->person; 
+        $u = BUser::select()->first();
+        $u->person;
 
         return response()->json([
             'res' => true,
             'msg' => 'Leido correctamente',
             'data' => $u
         ], 200);
-       
+
         //return  BUser::get()->person;
         //return BPerson::with('person')->get();
     }
@@ -31,7 +30,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        
+
     }
 
     /**
