@@ -9,8 +9,9 @@ use App\Models\BUser;
 class UserController extends Controller
 {
 
-    public function index()
+    public function index(Request $request )
     {
+        //echo json_encode($request->headers);
         $u = BUser::select()->first();
         $u->person;
 

@@ -22,9 +22,17 @@ class User extends Authenticatable
      protected $table = 'base_users';
 
     protected $fillable = [
+        'eid',
+        'oid', 
+        'escid', 
+        'subid', 
+
         'uid',
+        'pid', 
         'password',
     ];
+
+    
 
     /**
      * The attributes that should be hidden for serialization.
@@ -52,19 +60,32 @@ class User extends Authenticatable
 
     public static function generateToken()
     {
-        return Str::random(60);
+        return Str::random(128);
     }
 
-    public static function authenticate($email, $password)
+    public static function authenticate($uid, $rid,  $password)
     {
-        $user = self::where('email', $email)->first();
+        //$user = self::where('email', $email)->first();
+        $user = self::where('uid', $uid)->where('rid', $rid)->first();
 
-        if ($user && Hash::check($password, $user->password)) {
-            $user->api_token = self::generateToken();
-            $user->save();
-            return $user->api_token;
+        if ( $user && md5($password)== $user->password/*$user && Hash::check(md5($password), $user->password)*/) {
+//            echo json_encode($user);
+            $ua = BUserAuth::create([
+                'eid'   =>$user->eid,
+                'oid'   =>$user->oid,
+                'uid'   =>$user->uid,
+                'pid'   =>$user->pid,
+                'escid' =>$user->escid,
+                'subid' =>$user->subid,
+                'token' =>self::generateToken(),
+            ]);
+            //$user->api_token = self::generateToken();
+            //$user->save();
+            return $ua->token;
         }
 
         return null;
     }
+
+    
 }
